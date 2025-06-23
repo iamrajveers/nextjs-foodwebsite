@@ -2,13 +2,11 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-
 const app = express();
-
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: ['GET', 'POST'],
-  credentials: true,  
+  credentials: true,
 }));
 
 const httpServer = createServer(app);
@@ -23,15 +21,13 @@ const io = new Server(httpServer, {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-//   socket.emit('welcome', `Welcome to the server!`);
-  
   socket.broadcast.emit('welcome', `${socket.id} joined the chat.`);
 
-    socket.on('message', (data) => {
+  socket.on('message', (data) => {
     console.log('Received message:', data);
-    socket.broadcast.emit("recived-message",data)
+    socket.broadcast.emit("recived-message", data)
     io.emit('receive-emessage', data);
-  });   
+  });
 
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
